@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User page</title>
+</head>
+<body>
+
+<h3>My information</h3>
+<p th:text="${user.getId()}">VALUE</p>
+<p th:text="${user.getUsername()}">VALUE</p>
+<p th:text="${user.getSurname()}">VALUE</p>
+<p th:text="${user.getAge()}">VALUE</p>
+<p th:text="${user.getJob()}">VALUE</p>
+
+<a th:href="@{/user/{id}/edit(id=${user.getId()})}">Edit</a><br>
+
+<form th:method="POST" th:action="@{/logout}">
+    <input type="submit" value="Logout!"/>
+</form>
+
+</body>
+</html>
