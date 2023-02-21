@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.service;
 
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,20 +14,22 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
+import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final EntityManager entityManager;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           PasswordEncoder bCryptPasswordEncoder) {
+    public UserServiceImpl(EntityManager entityManager, UserRepository userRepository,
+                           RoleRepository roleRepository, PasswordEncoder bCryptPasswordEncoder) {
+        this.entityManager = entityManager;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -37,12 +38,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void saveUser(User user) {
-        // Первый - ADMIN+USER, остальные USER
-        if (null == userRepository.findAll()) {
-            List<Role> roles = List.of(new Role(1L, "ROLE_USER"), new Role(2L, "ROLE_ADMIN"));
-            user.setRoles(roles);
-        } else {
-            user.setRoles(Collections.singletonList(roleRepository.findById(1L).get()));
+
+        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
+            return;
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -50,18 +48,14 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(User user) {
-        userRepository
-                .findById(user.getId())
-                .ifPresent(updatedUser -> {
-                    updatedUser.setUsername(user.getUsername());
-                    updatedUser.setSurname(user.getSurname());
-                    updatedUser.setAge(user.getAge());
-                    updatedUser.setJob(user.getJob());
-                    updatedUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-
-                    userRepository.save(updatedUser);
-                });
+    public void updateUser(User user, Long id) {
+        User userFromDb = userRepository.findById(id).get();
+        userFromDb.setUsername(user.getUsername());
+        userFromDb.setSurname(user.getSurname());
+        userFromDb.setAge(user.getAge());
+        userFromDb.setJob(user.getJob());
+        userFromDb.setRoles(user.getRoles());
+        userRepository.save(userFromDb);
     }
 
     @Transactional(readOnly = true)

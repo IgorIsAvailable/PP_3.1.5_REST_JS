@@ -5,13 +5,42 @@
     <meta charset="UTF-8">
     <title>Show</title>
 </head>
+    <table>
+    <tr>
+        <th>Code</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td>ID</td>
+        <td><p th:text="${user.getId()}">VALUE</p></td>
+    </tr>
+    <tr>
+        <td>Username</td>
+        <td><p th:text="${user.getUsername()}">VALUE</p></td>
+    </tr>
+    <tr>
+        <td>Surname</td>
+        <td><p th:text="${user.getSurname()}">VALUE</p></td>
+    </tr>
+    <tr>
+        <td>Age</td>
+        <td><p th:text="${user.getAge()}">VALUE</p></td>
+    </tr>
+    <tr>
+        <td>Job</td>
+        <td><p th:text="${user.getJob()}">VALUE</p></td>
+    </tr>
+</table>
+
+    <hr/>
+    <h3>Roles:</h3>
+    <p th:each="role : ${userRoles}"
+       th:text="${role.getRole()}"
+       th:value="${role.getId()}"
+       th:field="*{user.getRoles()}">VALUE</p>
 <body>
 
-<p th:text="${user.getId()}">VALUE</p>
-<p th:text="${user.getUsername()}">VALUE</p>
-<p th:text="${user.getSurname()}">VALUE</p>
-<p th:text="${user.getAge()}">VALUE</p>
-<p th:text="${user.getJob()}">VALUE</p>
+<hr/>
 
 <a th:href="@{/admin/{id}/edit(id=${user.getId()})}">Edit</a><br>
 

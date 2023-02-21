@@ -7,13 +7,40 @@
 <body>
 
 <h3>My information</h3>
-<p th:text="${user.getId()}">VALUE</p>
-<p th:text="${user.getUsername()}">VALUE</p>
-<p th:text="${user.getSurname()}">VALUE</p>
-<p th:text="${user.getAge()}">VALUE</p>
-<p th:text="${user.getJob()}">VALUE</p>
+<table>
+    <tr>
+        <th>Code</th>
+        <th>Value</th>
+    </tr>
+    <tr>
+        <td>ID</td>
+        <td><p th:text="${user.getId()}">VALUE</p></td>
+    </tr>
+    <tr>
+        <td>Username</td>
+        <td><p th:text="${user.getUsername()}">VALUE</p></td>
+    </tr>
+    <tr>
+        <td>Surname</td>
+        <td><p th:text="${user.getSurname()}">VALUE</p></td>
+    </tr>
+    <tr>
+        <td>Age</td>
+        <td><p th:text="${user.getAge()}">VALUE</p></td>
+    </tr>
+    <tr>
+        <td>Job</td>
+        <td><p th:text="${user.getJob()}">VALUE</p></td>
+    </tr>
+</table>
 
-<a th:href="@{/user/{id}/edit(id=${user.getId()})}">Edit</a><br>
+<hr/>
+<h3>Roles:</h3>
+<p th:each="role : ${userRoles}"
+   th:text="${role.getRole()}"
+   th:value="${role.getId()}"
+   th:field="*{user.getRoles()}">VALUE</p>
+
 
 <form th:method="POST" th:action="@{/logout}">
     <input type="submit" value="Logout!"/>

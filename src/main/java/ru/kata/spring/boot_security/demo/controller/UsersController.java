@@ -23,25 +23,11 @@ public class UsersController {
 
     @GetMapping("/show")
     public String user(Model model, Principal principal) {
-        model.addAttribute("user", userService.getUserByUsername(principal.getName()));
+        User user =  userService.getUserByUsername(principal.getName());
+        model.addAttribute("user", user);
+        model.addAttribute("userRoles", user.getRoles());
         return "/USER/show";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model,@PathVariable("id") Long id) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "/USER/edit";
-    }
-
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") @Valid User user,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "/USER/edit";
-        }
-
-        userService.saveUser(user);
-        return "redirect:/user/show";
-    }
 
 }
