@@ -14,24 +14,19 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 @Service
 public class UserServiceImpl implements UserService {
-    private final EntityManager entityManager;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(EntityManager entityManager, UserRepository userRepository,
-                           RoleRepository roleRepository, PasswordEncoder bCryptPasswordEncoder) {
-        this.entityManager = entityManager;
+    public UserServiceImpl(UserRepository userRepository,
+                           PasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -50,12 +45,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(User user, Long id) {
         User userFromDb = userRepository.findById(id).get();
-        userFromDb.setUsername(user.getUsername());
-        userFromDb.setSurname(user.getSurname());
-        userFromDb.setAge(user.getAge());
-        userFromDb.setJob(user.getJob());
-        userFromDb.setRoles(user.getRoles());
-        userRepository.save(userFromDb);
+        // Если пароль не изменяется, то не кодируем при обновлении
+        if (userFromDb.getPassword().equals(user.getPassword())) {
+            userRepository.save(user);
+        } else {
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+        }
     }
 
     @Transactional(readOnly = true)

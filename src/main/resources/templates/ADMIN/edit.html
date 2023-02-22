@@ -24,6 +24,10 @@
     <input type="text" th:field="*{job}" id="job"/>
     <div style="color:darkred" th:if="${#fields.hasErrors('job')}" th:errors="*{job}">Job error</div>
     <br>
+    <label for="password">Enter password: </label>
+    <input type="text" th:field="*{password}" id="password"/>
+    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
+    <br>
     <p>
         <label>Roles:
             <input type="checkbox" name="roles"

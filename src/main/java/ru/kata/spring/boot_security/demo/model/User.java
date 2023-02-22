@@ -5,8 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.persistence.GenerationType;
-import javax.transaction.Transactional;
+import javax.persistence.GenerationType;;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import java.util.*;
@@ -31,6 +30,7 @@ public class User implements UserDetails {
     private String job;
 
     @Column(name = "password")
+    @NotEmpty(message = "Write password")
     private String password;
     @ManyToMany(cascade = {CascadeType.PERSIST},
             fetch = FetchType.LAZY)
