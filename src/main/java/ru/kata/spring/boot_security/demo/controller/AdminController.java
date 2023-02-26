@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +11,7 @@ import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.List;
 
 
@@ -20,13 +20,11 @@ import java.util.List;
 public class AdminController {
     private final UserService userService;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public AdminController(UserService userService, RoleRepository roleRepository, PasswordEncoder bCryptPasswordEncoder) {
+    public AdminController(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @GetMapping("/registration")
@@ -39,7 +37,7 @@ public class AdminController {
 
     @PostMapping("/registration")
     public String performRegistration(@ModelAttribute("user") @Valid User user,
-                                            BindingResult bindingResult) {
+                                      BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "/ADMIN/registration";
         }
@@ -48,13 +46,20 @@ public class AdminController {
     }
 
     @GetMapping
-    public String allUsers(Model model) {
+    public String allUsers(Model model, Principal principal,
+                           @ModelAttribute("user") User user) {
+
+        User admin = userService.getUserByUsername(principal.getName());
+        model.addAttribute("admin", admin);
+        model.addAttribute("userRoles", admin.getRoles());
         model.addAttribute("users", userService.getAllUsers());
+        List<Role> roles = (List<Role>) roleRepository.findAll();
+        model.addAttribute("allRoles", roles);
         return "/ADMIN/users_table";
     }
 
     @GetMapping("/{id}")
-    public String  show(@PathVariable("id") Long id, Model model) {
+    public String show(@PathVariable("id") Long id, Model model) {
         User user = userService.getUserById(id);
         model.addAttribute("user", user);
         model.addAttribute("userRoles", user.getRoles());
@@ -72,11 +77,10 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") @Valid User user, @PathVariable("id") Long id,
-                         BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "/ADMIN/edit";
-        }
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") Long id) {
+//        if (bindingResult.hasErrors()) {
+//            return "/ADMIN/edit";
+//        }
         userService.updateUser(user, id);
         return "redirect:/admin";
     }

@@ -34,10 +34,11 @@
 
     <hr/>
     <h3>Roles:</h3>
-    <p th:each="role : ${userRoles}"
-       th:text="${role.getRole()}"
-       th:value="${role.getId()}"
-       th:field="*{user.getRoles()}">VALUE</p>
+        <div th:each="role : ${userRoles}"
+             th:switch="${role.getRole()}">
+                <p th:case="'ROLE_ADMIN'">ADMIN</p>
+                <p th:case="'ROLE_USER'">USER</p>
+        </div>
 <body>
 
 <hr/>
