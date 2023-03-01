@@ -165,12 +165,14 @@
                                                                 </div>
 
                                                                 <span><b>Role</b></span>
-                                                                <select class="form-select" size="2"
+                                                                <select class="form-select" multiple size="2"
                                                                         aria-label="size 2 select example"
-                                                                        th:field="*{roles}" required>
+                                                                        id="roles" name="roles" required>
+                                                                    <!--  th:field="*{roles}"-->
                                                                     <option th:each="role : ${allRoles}"
                                                                             th:value="${role.getId()}"
-                                                                            th:switch="${role.getRole()}">
+                                                                            th:switch="${role.getRole()}"
+                                                                            th:selected="${user.roles.contains(role)}">
                                                                         <span th:case="'ROLE_ADMIN'">ADMIN</span>
                                                                         <span th:case="'ROLE_USER'">USER</span>
                                                                     </option>
@@ -319,7 +321,7 @@
                                                th:field="*{password}" required>
                                     </div>
                                     <span><b>Role</b></span>
-                                    <select class="form-select" size="2" aria-label="size 2 select example"
+                                    <select class="form-select" multiple size="2" aria-label="size 2 select example"
                                             th:field="*{roles}" required>
                                         <option th:each="role : ${allRoles}" th:value="${role.getId()}"
                                                 th:switch="${role.getRole()}">
