@@ -121,7 +121,7 @@ function editUser() {
         })
     })
         .then(() => {
-            $("#editModal.close").click();
+            $('#editModal').modal('hide');
             getUsers();
         })
 }
@@ -157,12 +157,13 @@ function deleteUser() {
 
     })
         .then(() => {
-            $("#deleteModal .close").click();
-            getUsers()
+            $('#deleteModal').modal('hide');
+            getUsers();
         })
 }
 
 function addUser() {
+    event.preventDefault();
     let username = document.getElementById('create_username').value;
     let surname = document.getElementById('create_surname').value;
     let age = document.getElementById('create_age').value;
