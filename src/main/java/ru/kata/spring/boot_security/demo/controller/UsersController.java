@@ -13,7 +13,7 @@ import java.security.Principal;
 
 @Controller
 @RequestMapping("/user")
-public class UsersController {
+public class  UsersController {
     private final UserService userService;
 
     public UsersController(UserService userService) {

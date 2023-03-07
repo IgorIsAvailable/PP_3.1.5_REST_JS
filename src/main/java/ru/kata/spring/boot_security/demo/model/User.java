@@ -17,7 +17,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name")
-    @NotEmpty(message = "Name shouldn't be empty")
+    @NotEmpty(message = "Username shouldn't be empty")
     private String username;
     @Column(name = "surname")
     @NotEmpty(message = "Surname shouldn't be empty")
@@ -40,6 +40,7 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
 
     public User() {
     }
@@ -102,6 +103,7 @@ public class User implements UserDetails {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
 
     @Override
     public String toString() {
