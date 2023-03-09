@@ -72,7 +72,14 @@ function getEditModal(id) {
                 const select = document.querySelector('#edit_role').getElementsByTagName('option');
 
                 for (let i = 0; i < select.length; i++) {
-                    if (select[i].value === (userEdit.roles[0].role || userEdit.roles[1].role)) select[i].selected = true;
+                    if (select[i].value === userEdit.roles[i].role) {
+                        select[i].selected = true;
+                        if (i === select.length - 1) {
+                            break;
+                        }
+                    } else if (select[i + 1].value === userEdit.roles[i].role) {
+                        select[i + 1].selected = true;
+                    }
                 }
             })
     });
@@ -192,7 +199,6 @@ function addUser() {
         })
 
 }
-
 
 
 /*  Методы вставки:
