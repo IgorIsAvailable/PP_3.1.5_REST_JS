@@ -72,7 +72,7 @@ function getEditModal(id) {
                 const select = document.querySelector('#edit_role').getElementsByTagName('option');
 
                 for (let i = 0; i < select.length; i++) {
-                    if (select[i].value === "ROLE_USER") select[i].selected = true;
+                    if (select[i].value === userEdit.roles[i].role) select[i].selected = true;
                 }
             })
     });
